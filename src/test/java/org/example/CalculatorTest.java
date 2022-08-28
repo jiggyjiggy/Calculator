@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 
@@ -27,7 +28,7 @@ public class CalculatorTest {
     @ParameterizedTest
     @MethodSource("formulaAndResult")
     void additionTest(int operand1, String operator, int operand2, int result) {
-        int calculatorResult = Calculator.calculator(operand1, operator, operand2);
+        int calculatorResult = Calculator.calculate(operand1, operator, operand2);
 
         assertThat(calculatorResult).isEqualTo(result);
     }
@@ -39,5 +40,13 @@ public class CalculatorTest {
                 arguments(4, "*", 2, 8),
                 arguments(4, "/", 2, 2)
         );
+    }
+
+    @DisplayName("나눗셈에서 0으로 나누는 경우, IllegalArgument 예외를 발생시킨다.")
+    @Test
+    void calculatorExceptionTest() {
+        assertThatCode(() -> Calculator.calculate(10, "/", 0))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("0으로 나눌 수 없습니다.");
     }
 }
